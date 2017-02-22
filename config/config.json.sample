@@ -1,0 +1,10 @@
+{
+  "development": {
+    "clarifyClientId": "OIJASDJ-pYUb2B7mEeK0V43rDv2PHlyYbC-uAU",
+    "clarifyClientSecret": "Uv07pctt46Kfw7lDBSEbx"
+  },
+  "production": {
+    "clarifyClientId": "OIJASDJ-pYUb2B7mEeK0V43rDv2PHlyYbC-uAU",
+    "clarifyClientSecret": "Uv07pctt46Kfw7lDBSEbx"
+  }
+}

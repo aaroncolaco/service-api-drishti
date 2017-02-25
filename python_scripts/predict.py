@@ -24,11 +24,11 @@ def facechop(imagepath,outputdir):
     cascade = cv2.CascadeClassifier(facedata)
 
     img = cv2.imread(imagepath)
-    print imagepath
+#    print imagepath
     minisize = (img.shape[1],img.shape[0])
     miniframe = cv2.resize(img, minisize)
 
-    faces = cascade.detectMultiScale(miniframe)
+    faces = cascade.detectMultiScale(miniframe,minNeighbors=3)
     facecount = len(faces)
     for f in faces:
         x, y, w, h = [ v for v in f ]
@@ -47,9 +47,9 @@ if __name__ == '__main__':
     facecount = 0
     # call facechop on file name
     picname = picname.split('/')[-1]
-    print picname 
+ #   print picname 
     outputdir = os.path.join(TEST_DIR,picname)
-    print outputdir
+ #   print outputdir
     mkdir_p(outputdir)
     predictions = []
     
@@ -57,7 +57,7 @@ if __name__ == '__main__':
     detect_dir = "/root/datadisk/pics/ofexplore/test/" +picname +'/*.jpg'
     args = ['sudo','docker','exec',OF_CONTAINER,'/bin/bash','/root/datadisk/pics/ofexplore/test-recognition.sh' , detect_dir]
     output,error = subprocess.Popen(args,stdout = subprocess.PIPE, stderr= subprocess.PIPE).communicate()
-    print output,error
+  #  print output,error
     output = output.split('===')
     for text in output:
           text = text.replace('\n','')
@@ -65,5 +65,12 @@ if __name__ == '__main__':
           if termlist[0] == 'Predict':
               predictions.append({"name": termlist[1], "probability": float(termlist[3])})
     
-    response = {"predictions": predictions,"faceCount":facecount }
+    persons = {}
+    for person in predictions:
+        if person['name'] in persons:
+            if person['probability'] > persons[person['name']]['probability']:
+                persons[person['name']]['probability'] = person['probability']
+        else:
+            persons[person['name']] = person
+    response = {"predictions": persons,"faceCount":facecount }
     print json.dumps(response)

@@ -63,7 +63,14 @@ const getPeopleInImage = (req, res) => {
   // called on every write to stdout
   pySpawn.stdout.on('data', function(data) {
     console.log(data);
-    return res.send(data)
+    let prediction = {}; 
+    try{
+        prediction = JSON.parse(data);
+    }catch(err){
+        console.error(err);
+        return res.end("ERROR");
+    }
+    return res.json(prediction);
   });
 
 };

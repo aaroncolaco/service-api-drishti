@@ -3,6 +3,7 @@
 const Clarifai = require('clarifai');
 const fs = require('fs');
 const spawn = require('child_process').spawn;
+const fork = require('child_process').fork;
 
 const config = require('../config');
 
@@ -25,6 +26,23 @@ const imageInfo = (req, res, next) => {
       res.json(err);
     }
   );
+};
+
+const firstLevelInfo = (req, res, next) => {
+  const foo = new Buffer(fs.readFileSync(req.file.path)).toString("base64");
+
+  const options = {
+    stdio: ['pipe']
+  };
+
+  // const pyFork = fork('lib/pushViaFirebase');
+  const json = {
+    "result": "A group of people",
+    "id": "432432"
+  };
+
+  // return res.send(req.file.path);
+  res.json(json);
 };
 
 const sendImgToScript = (req, res, next) => {
@@ -65,6 +83,7 @@ const sendImgToScript = (req, res, next) => {
 };
 
 module.exports = {
+  firstLevelInfo,
   imageInfo,
   sendImgToScript
 };

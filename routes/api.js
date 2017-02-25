@@ -14,7 +14,7 @@ router.get('/', function(req, res) {
   res.send('API route for drishti');
 });
 
-router.post('/', upload.single('photo'), imageController.sendImgToScript);
+router.post('/v2/first-level', upload.single('photo'), imageController.firstLevelInfo);
 
 
 module.exports = router;

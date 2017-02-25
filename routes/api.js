@@ -14,6 +14,8 @@ router.get('/', function(req, res) {
   res.send('API route for drishti');
 });
 
+router.post('/v2/face-id', upload.single('photo'), imageController.getPeopleInImage);
+
 router.post('/v2/first-level', upload.single('photo'), imageController.firstLevelInfo);
 
 

@@ -1,9 +1,10 @@
 'use strict';
 
 const Clarifai = require('clarifai');
+const execFile = require('child_process').execFile;
+const fork = require('child_process').fork;
 const fs = require('fs');
 const spawn = require('child_process').spawn;
-const fork = require('child_process').fork;
 
 const config = require('../config');
 
@@ -12,7 +13,7 @@ const clarifyApp = new Clarifai.App(
   config.getClarifyClientSecret()
 );
 
-
+// clarifai
 const imageInfo = (req, res, next) => {
   const foo = new Buffer(fs.readFileSync(req.file.path)).toString("base64");
 
@@ -28,6 +29,7 @@ const imageInfo = (req, res, next) => {
   );
 };
 
+// get first level info - mock route
 const firstLevelInfo = (req, res, next) => {
   const foo = new Buffer(fs.readFileSync(req.file.path)).toString("base64");
 
@@ -43,6 +45,27 @@ const firstLevelInfo = (req, res, next) => {
 
   // return res.send(req.file.path);
   res.json(json);
+};
+
+// return people in image
+const getPeopleInImage = (req, res) => {
+
+  let options = {
+    stdio: ['pipe']
+  };
+
+  let pySpawn = spawn(
+    'python',
+    ['python_scripts/predict.py', req.file.path], // path from root of project directory
+    options
+  );
+
+  // called on every write to stdout
+  pySpawn.stdout.on('data', function(data) {
+    console.log(data);
+    return res.send(data)
+  });
+
 };
 
 const sendImgToScript = (req, res, next) => {
@@ -64,16 +87,6 @@ const sendImgToScript = (req, res, next) => {
     return res.send(data)
   });
 
-  // when python script ends
- /* pySpawn.on('close', function(code) {
-    if (code !== 0) {
-      console.log("Python error code: " + code)
-      return res.status(500).send(code);
-    }
-    return res.status(200).end(scriptResponse);
-  });*/
-
-
   /*process.on("SIGINT", function() { console.log("sigint caught") });
 
   // parent.js
@@ -84,6 +97,7 @@ const sendImgToScript = (req, res, next) => {
 
 module.exports = {
   firstLevelInfo,
+  getPeopleInImage,
   imageInfo,
   sendImgToScript
 };

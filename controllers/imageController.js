@@ -29,7 +29,7 @@ const imageInfo = (req, res, next) => {
   );
 };
 
-// get first level info - mock route
+// get first level info - mock route : `\upload`
 const firstLevelInfo = (req, res, next) => {
   const foo = new Buffer(fs.readFileSync(req.file.path)).toString("base64");
 
@@ -63,7 +63,7 @@ const getPeopleInImage = (req, res) => {
   // called on every write to stdout
   pySpawn.stdout.on('data', function(data) {
     console.log(data);
-    let prediction = {}; 
+    let prediction = {};
     try{
         prediction = JSON.parse(data);
     }catch(err){

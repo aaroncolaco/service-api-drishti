@@ -33,14 +33,10 @@ const imageInfo = (req, res, next) => {
 const firstLevelInfo = (req, res, next) => {
   const foo = new Buffer(fs.readFileSync(req.file.path)).toString("base64");
 
-  const options = {
-    stdio: ['pipe']
-  };
-
   // const pyFork = fork('lib/pushViaFirebase');
   const json = {
     "result": "A group of people",
-    "id": "432432"
+    "image_id": "432432"
   };
 
   // return res.send(req.file.path);

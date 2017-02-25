@@ -12,9 +12,9 @@ router.get('/', function(req, res) {
   res.send('API route for drishti');
 });
 
-router.post('/face-id', upload.single('photo'), imageController.getPeopleInImage);
+router.post('/face-id', upload.single('file'), imageController.getPeopleInImage);
 
-router.post('/upload', upload.single('photo'), imageController.firstLevelInfo);
+router.post('/upload', upload.single('file'), imageController.firstLevelInfo);
 
 
 module.exports = router;
